@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  datasource:
+    url: jdbc:postgresql://localhost:5432/users
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: testtest
+    testOnBorrow: true
+    validationQuery: SELECT 1
+  jpa:
+    properties.hibernate.default_schema: users_scheme
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+
