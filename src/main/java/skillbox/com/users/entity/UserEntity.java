@@ -1,10 +1,6 @@
 package skillbox.com.users.entity;
 
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,15 +12,15 @@ public class UserEntity {
     private Integer id;
 
     @Basic
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = true)
     private String name;
 
     @Basic
-    @Column(name = "login", nullable = false)
+    @Column(name = "login", nullable = true)
     private String login;
 
     @Basic
-    @Column(name = "gender", nullable = false)
+    @Column(name = "gender", nullable = true)
     private String gender;
 
     @Basic
@@ -36,23 +32,31 @@ public class UserEntity {
     private String phone;
 
     @Basic
-    @Column(name = "active", nullable = false)
+    @Column(name = "active", nullable = true)
     private boolean active;
 
     @Basic
     @Column(name = "address")
     private String address;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "city_id", /* referencedColumnName = "id",*/ nullable = false,
-                foreignKey = @ForeignKey(name = "fk_users_cities"))
-    private CityEntity cityEntity;
+    @Basic
+    @Column(name = "deleted", nullable = true)
+    private boolean deleted;
 
-    @OneToMany(mappedBy = "subscriberEntity", fetch = FetchType.LAZY)
-    private List<SubscriptionEntity> subscriberEntityList = new ArrayList<>();
+    @Basic
+    @Column(name = "city_id", nullable = true)
+    private Integer cityId;
 
-    @OneToMany(mappedBy = "subscribedEntity", fetch = FetchType.LAZY)
-    private List<SubscriptionEntity> subscribedEntityList = new ArrayList<>();
+    //    @ManyToOne(fetch = FetchType.EAGER)
+    //    @JoinColumn(name = "city_id", /* referencedColumnName = "id",*/ nullable = true,
+    //                foreignKey = @ForeignKey(name = "fk_users_cities"))
+    //    private CityEntity cityEntity;
+
+    //    @OneToMany(mappedBy = "subscriberEntity", fetch = FetchType.LAZY)
+    //    private List<SubscriptionEntity> subscriberEntityList = new ArrayList<>();
+    //
+    //    @OneToMany(mappedBy = "subscribedEntity", fetch = FetchType.LAZY)
+    //    private List<SubscriptionEntity> subscribedEntityList = new ArrayList<>();
 
     // CONSTRUCTORS
     public UserEntity() {
@@ -61,7 +65,10 @@ public class UserEntity {
 
     public UserEntity(Integer id, String name, String login,
                       String gender, String email, String phone,
-                      boolean active, String address, CityEntity cityEntity) {
+                      boolean active, String address, boolean deleted,
+                      Integer cityId
+                      //CityEntity cityEntity
+    ) {
         this.id = id;
         this.name = name;
         this.login = login;
@@ -70,7 +77,9 @@ public class UserEntity {
         this.phone = phone;
         this.active = active;
         this.address = address;
-        this.cityEntity = cityEntity;
+        this.deleted = deleted;
+        this.cityId = cityId;
+        //this.cityEntity = cityEntity;
     }
 
     // METHODS
@@ -138,43 +147,61 @@ public class UserEntity {
         this.address = address;
     }
 
-    public CityEntity getCityEntity() {
-        return cityEntity;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setCityEntity(CityEntity cityEntity) {
-        this.cityEntity = cityEntity;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
-    public List<SubscriptionEntity> getSubscriberEntityList() {
-        return subscriberEntityList;
+    public Integer getCityId() {
+        return cityId;
     }
 
-    public void setSubscriberEntityList(List<SubscriptionEntity> subscriberEntityList) {
-        this.subscriberEntityList = subscriberEntityList;
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
     }
 
-    public List<SubscriptionEntity> getSubscribedEntityList() {
-        return subscribedEntityList;
-    }
+    //    public CityEntity getCityEntity() {
+    //        return cityEntity;
+    //    }
 
-    public void setSubscribedEntityList(List<SubscriptionEntity> subscribedEntityList) {
-        this.subscribedEntityList = subscribedEntityList;
-    }
+    //    public void setCityEntity(CityEntity cityEntity) {
+    //        this.cityEntity = cityEntity;
+    //    }
+
+    //    public List<SubscriptionEntity> getSubscriberEntityList() {
+    //        return subscriberEntityList;
+    //    }
+
+    //    public void setSubscriberEntityList(List<SubscriptionEntity> subscriberEntityList) {
+    //        this.subscriberEntityList = subscriberEntityList;
+    //    }
+
+    //    public List<SubscriptionEntity> getSubscribedEntityList() {
+    //        return subscribedEntityList;
+    //    }
+
+    //    public void setSubscribedEntityList(List<SubscriptionEntity> subscribedEntityList) {
+    //        this.subscribedEntityList = subscribedEntityList;
+    //    }
 
     @Override
     public String toString() {
-        return "UserEntity{" +
-                "id="            + id      +
-                ", name='"       + name    + '\'' +
-                ", login='"      + login   + '\'' +
-                ", gender='"     + gender  + '\'' +
-                ", email='"      + email   + '\'' +
-                ", phone='"      + phone   + '\'' +
-                ", active="      + active  +
-                ", address='"    + address + '\'' +
-                ", cityEntity='" + cityEntity.getName() + '\'' +
-                '}';
+        return "UserEntity{"
+                +  "id="             + id
+                + ", name='"        + name    + '\''
+                + ", login='"       + login   + '\''
+                + ", gender='"      + gender  + '\''
+                + ", email='"       + email   + '\''
+                + ", phone='"       + phone   + '\''
+                + ", active="       + active
+                + ", address='"     + address + '\''
+                + ", deleted="      + deleted
+                + ", cityID="       + cityId
+                // + ", cityEntity='"  + (cityEntity == null ? "" : cityEntity.getName()) + '\''
+                  + '}';
     }
 
     @Override

@@ -18,8 +18,8 @@ public class CityEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "cityEntity", fetch = FetchType.LAZY)
-    private List<UserEntity> userEntityList = new ArrayList<>();
+    //    @OneToMany(mappedBy = "cityEntity", fetch = FetchType.LAZY)
+    //    private List<UserEntity> userEntityList = new ArrayList<>();
 
     // CONSTRUCTORS
     public CityEntity() {
@@ -47,13 +47,13 @@ public class CityEntity {
         this.name = name;
     }
 
-    public List<UserEntity> getUserEntityList() {
-        return userEntityList;
-    }
+    //    public List<UserEntity> getUserEntityList() {
+    //        return userEntityList;
+    //    }
 
-    public void setUserEntityList(List<UserEntity> userEntityList) {
-        this.userEntityList = userEntityList;
-    }
+    //    public void setUserEntityList(List<UserEntity> userEntityList) {
+    //        this.userEntityList = userEntityList;
+    //    }
 
     @Override
     public String toString() {

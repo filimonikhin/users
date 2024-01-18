@@ -26,10 +26,10 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-compileJava.options.encoding = 'WINDOWS-1251' // устанавливает кодировку для компилируемого кода
-javadoc.options.encoding = 'WINDOWS-1251' // устанавливает кодировку для генерируемой документации
-compileTestJava.options.encoding = 'WINDOWS-1251'
-
-tasks.withType(JavaCompile).configureEach {
-	options.encoding = 'WINDOWS-1251'
-}
+//compileJava.options.encoding = 'WINDOWS-1251' // устанавливает кодировку для компилируемого кода
+//javadoc.options.encoding = 'WINDOWS-1251' // устанавливает кодировку для генерируемой документации
+//compileTestJava.options.encoding = 'WINDOWS-1251'
+//
+//tasks.withType(JavaCompile).configureEach {
+//	options.encoding = 'WINDOWS-1251'
+//}
