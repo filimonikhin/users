@@ -1,6 +1,9 @@
 package skillbox.com.users.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.DialectOverride;
+import org.hibernate.annotations.SQLDelete;
+
 import java.util.Objects;
 
 @Entity

@@ -13,16 +13,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     Optional<UserEntity> findByLogin(String login);
     Boolean existsByLogin(String userLogin);
 
-    /*
-    @Query(value ="SELECT u FROM UserEntity u WHERE u.login = :p_login")
-    Optional<UserEntity> findByLogin(@Param("p_login") String login);
-    */
-
-    /*
-    @Query (value = "SELECT u FROM UserEntity u WHERE u.cityEntity.id = :p_city_id")
-    List<UserEntity> findUsersByCityId(@Param("p_city_id") Integer cityId);
-    */
-
     @Modifying
     @Transactional
     @Query (value = "UPDATE UserEntity u SET u.deleted = true WHERE u.id = :p_user_id")
@@ -34,10 +24,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     void deleteByUserLogin(@Param("p_user_login") String userLogin);
 
     List<UserEntity> findAllByOrderByIdAsc();
+    List<UserEntity> findByDeletedFalse();
 
     /*
-    @Query (value = "SELECT u FROM UserEntity u WHERE u.login = :p_user_login")
-    Boolean existByLogin(@Param("p_user_login") String userLogin);
-    */
+    @Query(value ="SELECT u FROM UserEntity u WHERE u.login = :p_login")
+    Optional<UserEntity> findByLogin(@Param("p_login") String login);
 
+    @Query (value = "SELECT u FROM UserEntity u WHERE u.cityEntity.id = :p_city_id")
+    List<UserEntity> findUsersByCityId(@Param("p_city_id") Integer cityId);
+    */
 }

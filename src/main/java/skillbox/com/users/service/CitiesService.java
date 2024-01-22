@@ -3,9 +3,14 @@ package skillbox.com.users.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import skillbox.com.users.dto.CityDto;
 import skillbox.com.users.entity.CityEntity;
+import skillbox.com.users.entity.UserEntity;
+import skillbox.com.users.mapper.CityMapper;
 import skillbox.com.users.repository.CityRepository;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 // import org.springframework.util.ReflectionUtils;
 // import java.lang.reflect.Field;
 // import java.util.Map;
@@ -14,74 +19,56 @@ import java.util.List;
 @Service
 public class CitiesService {
     private final CityRepository cityRepository;
+    private final CityMapper cityMapper;
 
-    public CitiesService(CityRepository cityRepository) {
+    public CitiesService(CityRepository cityRepository, CityMapper cityMapper) {
         this.cityRepository = cityRepository;
+        this.cityMapper = cityMapper;
     }
 
-    public List<CityEntity> getAllCities() {
-        return cityRepository.findAllByOrderByIdAsc();
+    public List<CityDto> getAllCities() {
+        return cityRepository.findAllByOrderByIdAsc().stream()
+                .map(cityMapper::entityToDto)
+                .collect(Collectors.toList());
     }
 
-    public CityEntity getCity(Integer cityId) {
-        return cityRepository.findById(cityId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public CityDto getCity(Integer cityId) {
+        return cityRepository.findById(cityId)
+                .map(cityMapper::entityToDto)
+                .orElse(null);
     }
 
-    public String createCity(CityEntity cityEntity) {
+    public CityDto createCity(CityDto cityDto) {
+        CityEntity cityEntity = cityMapper.dtoToEntity(cityDto);
         CityEntity savedCity = cityRepository.save(cityEntity);
-        return String.format("Город %s добавлен в базу id = %s", savedCity.getName(), savedCity.getId());
+        return cityMapper.entityToDto(savedCity);
     }
 
-    public String deleteCity(Integer cityId) {
+    public boolean deleteCity(Integer cityId) {
         if (!cityRepository.existsById(cityId)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            //throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            return false;
         }
         cityRepository.deleteById(cityId);
-        return String.format("Город с id = %s успешно удален", cityId);
+        return true;
     }
 
     // если нужно передавать все поля в JSON
-    public String updateCity(CityEntity cityEntity, Integer cityId) {
+    public boolean updateCity(CityDto cityDto, Integer cityId) {
 
-       if (!cityRepository.existsById(cityId)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+       if (!cityRepository.existsById(cityId) || cityDto == null) {
+           return false;
+           // throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        if (cityEntity.getId() == null) cityEntity.setId(cityId);
-
-        CityEntity savedcity = cityRepository.save(cityEntity);
-
-        return String.format("Город %s успешно обновлен", savedcity.getName());
-    }
-
-    // если в запросе JSON передается тоько изменяемое поле
-    /*
-    public String updateCity(Map<String, Object> fields, Integer cityId) {
-        Optional<CityEntity> existingCity = cityRepository.findById(cityId);
-
-        if (existingCity.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if (cityDto.getId() == null) {
+            cityDto.setId(cityId);
         }
 
-        CityEntity cityEntity = existingCity.get();
+        CityEntity savedCity = cityRepository.save(cityMapper.dtoToEntity(cityDto));
 
-        fields.forEach ((fieldName, fieldValue) -> {
-            // поис поля в классе
-            // System.out.println ("field name: " + fieldName + "\n field value: " + fieldValue);
-            Field field = ReflectionUtils.findField (cityEntity.getClass(), fieldName);
-
-            if (field != null) {
-                // делаем доступным для изменения private поля
-                field.setAccessible (true);
-
-                // установка значения fieldValue для поля field объекта userEntity
-                ReflectionUtils.setField (field, cityEntity, fieldValue);
-
-                cityRepository.save (cityEntity);
-            }
-        });
-
-        return String.format("Город %s успешно обновлен", cityEntity.getName());
+        return true;
+        //return String.format("Город %s успешно обновлен", savedcity.getName());
     }
-    */
+
 }

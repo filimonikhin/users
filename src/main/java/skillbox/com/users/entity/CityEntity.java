@@ -26,7 +26,8 @@ public class CityEntity {
         //
     }
 
-    public CityEntity(String name) {
+    public CityEntity(Integer id, String name) {
+        this.id = id;
         this.name = name;
     }
 

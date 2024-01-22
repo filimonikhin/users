@@ -52,13 +52,15 @@ public class SubscriptionEntity {
         //
     }
 
-    public SubscriptionEntity(Date subscribeDate,
+    public SubscriptionEntity(Integer id,
+                              Date subscribeDate,
                               Integer subscriberId,
                               Integer subscribedId,
                               boolean deleted
                               // UserEntity subscriberEntity,
                               // UserEntity subscribedEntity
                               ) {
+        this.id = id;
         this.subscribeDate = subscribeDate;
         this.subscriberId = subscriberId;
         this.subscribedId = subscribedId;

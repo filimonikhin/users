@@ -1,7 +1,9 @@
 package skillbox.com.users.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import skillbox.com.users.entity.UserEntity;
+import skillbox.com.users.dto.UserDto;
 import skillbox.com.users.service.UserService;
 import java.util.List;
 
@@ -16,48 +18,68 @@ public class UserController {
     }
 
     @PostMapping
-    String createUser(@RequestBody UserEntity userEntity) {
-        return userService.createUser(userEntity);
+    ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+        return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{userId}")
-    UserEntity getUser(@PathVariable Integer userId) {
-        return userService.getUser(userId);
+    ResponseEntity<UserDto> getUser(@PathVariable Integer userId) {
+        UserDto userDto = userService.getUser(userId);
+
+        if (userDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     @GetMapping(path = "/login/{userLogin}")
-    UserEntity getUserByLogin(@PathVariable String userLogin) {
-        return userService.getUserByLogin(userLogin);
+    ResponseEntity<UserDto> getUserByLogin(@PathVariable String userLogin) {
+        UserDto userDto = userService.getUserByLogin(userLogin);
+
+        if (userDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    /* метод работает, когда в JSON запросе передаем только изменяемое поле
     @PatchMapping("/{userId}")
-    String UpdateUser(@RequestBody Map<String, Object> fields, @PathVariable Integer userId) {
-        return userService.updateUser(fields, userId);
-    }
-    */
+    ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable Integer userId) {
+        boolean updated = userService.updateUser(userDto, userId);
 
-    /* если нужно передавать все поля Entity в JSON (не сработает, если в JSON передаем только изменяемое поле
-       т.к. в этом случает в Entity другие поля будут = null)
-    */
-    @PatchMapping("/{userId}")
-    String updateUser(@RequestBody UserEntity userEntity, @PathVariable Integer userId) {
-        return userService.updateUser(userEntity, userId);
+        if (!updated) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
-    String deleteUser(@PathVariable Integer userId) {
-        return userService.deleteUser(userId);
+    ResponseEntity<Boolean> deleteUser(@PathVariable Integer userId) {
+        boolean deleted =  userService.deleteUser(userId);
+
+        if (!deleted) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     @DeleteMapping("/login/{userLogin}")
-    String deleteUserByLogin(@PathVariable String userLogin) {
-        return userService.deleteUserByLogin(userLogin);
+     ResponseEntity<Boolean> deleteUserByLogin(@PathVariable String userLogin) {
+        boolean deleted = userService.deleteUserByLogin(userLogin);
+
+        if (!deleted) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     @GetMapping()
-    List<UserEntity> getAllUsers() {
-        return userService.getAllUsers();
+    ResponseEntity<List<UserDto>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
 }

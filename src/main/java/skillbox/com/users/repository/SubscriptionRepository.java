@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import skillbox.com.users.entity.SubscriptionEntity;
-
+import java.util.List;
 import java.util.Optional;
 
 public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, Integer> {
@@ -27,4 +27,6 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
     @Transactional
     @Query (value = "UPDATE SubscriptionEntity se SET se.deleted = true WHERE se.subscriberId = :p_user_id OR se.subscribedId = :p_user_id")
     void deleteSubscriptionByUserId(@Param("p_user_id") Integer userId);
+
+    List<SubscriptionEntity> findByDeletedFalse();
 }

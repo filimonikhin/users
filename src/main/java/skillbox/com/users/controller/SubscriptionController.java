@@ -1,6 +1,9 @@
 package skillbox.com.users.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import skillbox.com.users.dto.SubscriptionDto;
 import skillbox.com.users.entity.SubscriptionEntity;
 import skillbox.com.users.service.SubscriptionService;
 
@@ -16,17 +19,23 @@ public class SubscriptionController {
     }
 
     @GetMapping
-    public List<SubscriptionEntity> getAllSubscriptions() {
-        return subscriptionService.getAllSubscriptions();
+    public ResponseEntity<List<SubscriptionDto>> getAllSubscriptions() {
+        return new ResponseEntity<>(subscriptionService.getAllSubscriptions(), HttpStatus.OK);
     }
 
     @PostMapping
-    String createSubscription(@RequestBody SubscriptionEntity subscriptionEntity) {
-        return subscriptionService.createSubscription(subscriptionEntity);
+    ResponseEntity<SubscriptionDto> createSubscription(@RequestBody SubscriptionDto subscriptionDto) {
+        return new ResponseEntity<>(subscriptionService.createSubscription(subscriptionDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{subscriptionId}")
-    String deleteUser(@PathVariable Integer subscriptionId) {
-        return subscriptionService.deleteSubscription(subscriptionId);
+    ResponseEntity<Boolean> deleteSubscription(@PathVariable Integer subscriptionId) {
+        boolean deleted = subscriptionService.deleteSubscription(subscriptionId);
+
+        if (!deleted) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }

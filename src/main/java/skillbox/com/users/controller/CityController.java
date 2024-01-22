@@ -1,8 +1,13 @@
 package skillbox.com.users.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import skillbox.com.users.entity.CityEntity;
+//import skillbox.com.users.entity.CityEntity;
+import skillbox.com.users.dto.CityDto;
 import skillbox.com.users.service.CitiesService;
+
+import javax.swing.text.html.Option;
 import java.util.List;
 
 @RestController
@@ -16,39 +21,46 @@ public class CityController {
     }
 
     @PostMapping
-    String CreateCity(@RequestBody CityEntity cityEntity) {
-        return citiesService.createCity(cityEntity);
+    ResponseEntity<CityDto> CreateCity(@RequestBody CityDto cityDTO) {
+        return new ResponseEntity<>(citiesService.createCity(cityDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{cityId}")
-    String deleteCity(@PathVariable Integer cityId) {
-        return citiesService.deleteCity(cityId);
+    ResponseEntity<Integer> deleteCity(@PathVariable Integer cityId) {
+        boolean deleted = citiesService.deleteCity(cityId);
+
+        if (!deleted) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(cityId, HttpStatus.OK);
     }
 
-    // если в запросе JSON передается тоько изменяемое поле
-    /*
     @PatchMapping("/{cityId}")
-    String UpdateCity(@RequestBody Map<String, Object> fields, @PathVariable Integer cityId) {
-        return citiesService.updateCity(fields, cityId);
-    }
-    */
+    ResponseEntity<CityDto> UpdateCity(@RequestBody CityDto cityDto, @PathVariable Integer cityId) {
+        boolean updated = citiesService.updateCity(cityDto, cityId);
 
-    /* если нужно передавать все поля Entity в JSON (но не сработает, если в JSON передаем только изменяемое поле
-       т.к. в этом случает в Entity другие поля будут = null)
-    */
-    @PatchMapping("/{cityId}")
-    String UpdateCity(@RequestBody CityEntity cityEntity, @PathVariable Integer cityId) {
-        return citiesService.updateCity(cityEntity, cityId);
+        if (!updated) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
-    public List<CityEntity> getAllCities() {
-        return citiesService.getAllCities();
+    public ResponseEntity<List<CityDto>> getAllCities() {
+        return new ResponseEntity<>(citiesService.getAllCities(), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{cityId}")
-    CityEntity getUser(@PathVariable Integer cityId) {
-        return citiesService.getCity(cityId);
+    ResponseEntity<CityDto> getCity(@PathVariable Integer cityId) {
+        CityDto cityDto = citiesService.getCity(cityId);
+
+        if (cityDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(cityDto, HttpStatus.OK);
     }
 
 }
