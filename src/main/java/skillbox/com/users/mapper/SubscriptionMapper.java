@@ -6,7 +6,7 @@ import skillbox.com.users.entity.SubscriptionEntity;
 
 @Component
 public class SubscriptionMapper {
-    public SubscriptionEntity dtoToEntity (SubscriptionDto subscriptionDto) {
+    public static SubscriptionEntity dtoToEntity (SubscriptionDto subscriptionDto) {
         if (subscriptionDto == null) {
             return null;
         }
@@ -19,7 +19,7 @@ public class SubscriptionMapper {
         );
     }
 
-    public SubscriptionDto entityToDto(SubscriptionEntity subscriptionEntity) {
+    public static SubscriptionDto entityToDto(SubscriptionEntity subscriptionEntity) {
         if (subscriptionEntity == null) {
             return  null;
         }

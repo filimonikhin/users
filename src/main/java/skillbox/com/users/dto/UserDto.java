@@ -3,7 +3,7 @@ package skillbox.com.users.dto;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 
-public class UserDto {
+public class UserDto implements  Cloneable {
     private Integer id;
     private String name;
     private String login;
@@ -126,5 +126,15 @@ public class UserDto {
                 ", deleted=" + deleted +
                 ", cityId=" + cityId +
                 '}';
+    }
+
+    @Override
+    public UserDto clone() {
+        try {
+            UserDto clone = (UserDto) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

@@ -18,25 +18,23 @@ public class SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
-    private final SubscriptionMapper subscriptionMapper;
 
     public SubscriptionService(SubscriptionRepository subscriptionRepository, UserRepository userRepository, SubscriptionMapper subscriptionMapper) {
         this.subscriptionRepository = subscriptionRepository;
         this.userRepository = userRepository;
-        this.subscriptionMapper = subscriptionMapper;
     }
 
     public List<SubscriptionDto> getAllSubscriptions() {
         //return subscriptionRepository.findAll();
         return subscriptionRepository.findByDeletedFalse().stream()
-                .map(subscriptionMapper::entityToDto)
+                .map(SubscriptionMapper::entityToDto)
                 .collect(Collectors.toList());
     }
 
     public SubscriptionDto createSubscription(SubscriptionDto subscriptionDto) {
-        SubscriptionEntity subscriptionEntity = subscriptionMapper.dtoToEntity(subscriptionDto);
+        SubscriptionEntity subscriptionEntity = SubscriptionMapper.dtoToEntity(subscriptionDto);
         SubscriptionEntity savedSubscription = subscriptionRepository.save(subscriptionEntity);
-        return subscriptionMapper.entityToDto(savedSubscription);
+        return SubscriptionMapper.entityToDto(savedSubscription);
         // Optional<UserEntity> subscriber = userRepository.findById(subscriptionEntity.getSubscriberId());
         // Optional<UserEntity> subscribed = userRepository.findById(subscriptionEntity.getSubscribedId());
         // return String.format("Создана подписка пользователя %s на пользователя %s", subscriber.get().getName(), subscribed.get().getName());

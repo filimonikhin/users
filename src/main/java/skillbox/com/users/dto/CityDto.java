@@ -1,6 +1,6 @@
 package skillbox.com.users.dto;
 
-public class CityDto {
+public class CityDto implements Cloneable {
     private Integer id;
     private String name;
     //  private List<UserEntity> userEntityList = new ArrayList<>();
@@ -36,5 +36,15 @@ public class CityDto {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public CityDto clone() {
+        try {
+            CityDto clone = (CityDto) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

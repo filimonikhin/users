@@ -3,11 +3,8 @@ package skillbox.com.users.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-//import skillbox.com.users.entity.CityEntity;
 import skillbox.com.users.dto.CityDto;
 import skillbox.com.users.service.CitiesService;
-
-import javax.swing.text.html.Option;
 import java.util.List;
 
 @RestController

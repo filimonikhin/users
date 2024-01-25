@@ -8,7 +8,7 @@ import skillbox.com.users.entity.UserEntity;
 
 @Component
 public class UserMapper {
-    public UserEntity dtoToEntity (UserDto userDto) {
+    public static UserEntity dtoToEntity (UserDto userDto) {
         if (userDto == null) {
             return null;
         }
@@ -26,7 +26,7 @@ public class UserMapper {
         );
     }
 
-    public UserDto entityToDto(UserEntity userEntity) {
+    public static UserDto entityToDto(UserEntity userEntity) {
         if (userEntity == null) {
             return  null;
         }

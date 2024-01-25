@@ -1,15 +1,11 @@
 package skillbox.com.users.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import skillbox.com.users.dto.CityDto;
 import skillbox.com.users.entity.CityEntity;
-import skillbox.com.users.entity.UserEntity;
 import skillbox.com.users.mapper.CityMapper;
 import skillbox.com.users.repository.CityRepository;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 // import org.springframework.util.ReflectionUtils;
 // import java.lang.reflect.Field;
@@ -19,29 +15,27 @@ import java.util.stream.Collectors;
 @Service
 public class CitiesService {
     private final CityRepository cityRepository;
-    private final CityMapper cityMapper;
 
-    public CitiesService(CityRepository cityRepository, CityMapper cityMapper) {
+    public CitiesService(CityRepository cityRepository) {
         this.cityRepository = cityRepository;
-        this.cityMapper = cityMapper;
     }
 
     public List<CityDto> getAllCities() {
         return cityRepository.findAllByOrderByIdAsc().stream()
-                .map(cityMapper::entityToDto)
+                .map(CityMapper::entityToDto)
                 .collect(Collectors.toList());
     }
 
     public CityDto getCity(Integer cityId) {
         return cityRepository.findById(cityId)
-                .map(cityMapper::entityToDto)
+                .map(CityMapper::entityToDto)
                 .orElse(null);
     }
 
     public CityDto createCity(CityDto cityDto) {
-        CityEntity cityEntity = cityMapper.dtoToEntity(cityDto);
+        CityEntity cityEntity = CityMapper.dtoToEntity(cityDto);
         CityEntity savedCity = cityRepository.save(cityEntity);
-        return cityMapper.entityToDto(savedCity);
+        return CityMapper.entityToDto(savedCity);
     }
 
     public boolean deleteCity(Integer cityId) {
@@ -65,7 +59,7 @@ public class CitiesService {
             cityDto.setId(cityId);
         }
 
-        CityEntity savedCity = cityRepository.save(cityMapper.dtoToEntity(cityDto));
+        CityEntity savedCity = cityRepository.save(CityMapper.dtoToEntity(cityDto));
 
         return true;
         //return String.format("Город %s успешно обновлен", savedcity.getName());

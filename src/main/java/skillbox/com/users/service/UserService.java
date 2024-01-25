@@ -20,33 +20,30 @@ public class UserService {
     private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
 
-    private final UserMapper userMapper;
-
     public UserService(UserRepository userRepository,
                        SubscriptionRepository subscriptionRepository,
                        UserMapper userMapper) {
         this.userRepository = userRepository;
         this.subscriptionRepository = subscriptionRepository;
-        this.userMapper = userMapper;
     }
 
     public UserDto createUser(UserDto userDto) {
-        UserEntity userEntity = userMapper.dtoToEntity(userDto);
+        UserEntity userEntity = UserMapper.dtoToEntity(userDto);
         UserEntity savedUser = userRepository.save(userEntity);
-        return userMapper.entityToDto(savedUser);
+        return UserMapper.entityToDto(savedUser);
         //return String.format("Пользователь %s добавлен в базу с id = %s", savedUser.getName(), savedUser.getId());
     }
 
     public UserDto getUser(Integer userId) {
         return userRepository.findById(userId)
-                .map(userMapper::entityToDto)
+                .map(UserMapper::entityToDto)
                 .orElse(null);
         //return userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public UserDto getUserByLogin(String userLogin) {
         return  userRepository.findByLogin(userLogin)
-                .map(userMapper::entityToDto)
+                .map(UserMapper::entityToDto)
                 .orElse(null);
         //return userRepository.findByLogin(userLogin).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
@@ -61,7 +58,7 @@ public class UserService {
             userDto.setId(userId);
         }
 
-        UserEntity savedUser = userRepository.save(userMapper.dtoToEntity(userDto));
+        UserEntity savedUser = userRepository.save(UserMapper.dtoToEntity(userDto));
         return true;
         // return String.format("Пользователь %s успешно обновлен", savedUser.getName());
     }
@@ -96,7 +93,7 @@ public class UserService {
 
     public List<UserDto> getAllUsers() {
         return userRepository./*findAllByOrderByIdAsc()*/findByDeletedFalse().stream()
-                .map(userMapper::entityToDto)
+                .map(UserMapper::entityToDto)
                 .collect(Collectors.toList());
     }
 
