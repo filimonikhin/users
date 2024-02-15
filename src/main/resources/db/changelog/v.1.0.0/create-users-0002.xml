@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="1.0.0-5" author="Fil">
+        <createSequence schemaName="users_scheme" sequenceName="user_id_seq" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="1.0.0-6" author="Fil">
+        <createTable schemaName="users_scheme" tableName="users" remarks="Пользователи">
+            <column name="id" type="integer" defaultValueComputed="nextval('user_id_seq')" remarks="ИД">
+				<constraints primaryKeyName="users_pkey" nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="name" type="varchar(64)" remarks="ФИО">
+				<constraints nullable="false"/>
+            </column>
+            <column name="login" type="varchar(64)" remarks="Логин">
+				<constraints nullable="false"/>
+            </column>
+            <column name="gender" type="varchar(1)" remarks="Пол (F-женщина, M-мужчина)">
+				<constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(64)" remarks="Адрес электронной почты">
+				<constraints nullable="true"/>
+            </column>
+            <column name="phone" type="varchar(64)" remarks="Телефон">
+				<constraints nullable="true"/>
+            </column>
+            <column name="active" type="boolean" remarks="Активность (False-не активен, True-активен)">
+				<constraints nullable="true"/>
+            </column>
+            <column name="address" type="varchar(255)" remarks="Адрес">
+				<constraints nullable="true"/>
+            </column>
+            <column name="city_id" type="integer" remarks="ИД города (ссылка на справочник городов cities)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="deleted" type="boolean" remarks="Признак удаленного пользователя">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.0-7" author="Fil">
+        <sql>
+            ALTER TABLE users_scheme.users ADD CONSTRAINT gender_check CHECK (gender IN ('F','M'))
+        </sql>
+    </changeSet>
+
+    <changeSet id="1.0.0-8" author="Fil">
+        <createIndex schemaName="users_scheme" tableName="users" indexName="users_city_idx">
+            <column name="city_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="1.0.0-9" author="Fil">
+        <createIndex schemaName="users_scheme" tableName="users" indexName="users_login_uidx" unique="true">
+            <column name="login"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="1.0.0-10" author="Fil">
+        <createIndex schemaName="users_scheme" tableName="users" indexName="users_name_idx">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="1.0.0-11" author="Fil">
+        <createIndex schemaName="users_scheme" tableName="users" indexName="users_email_idx">
+            <column name="email"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="1.0.0-12" author="Fil">
+        <insert schemaName="users_scheme" tableName="users">
+            <column name="name" value="Виктор"/>
+            <column name="login" value="victor"/>
+            <column name="gender" value="M"/>
+            <column name="email" value="victor@gmail.com"/>
+            <column name="phone" value="8(960)222-22-22"/>
+            <column name="active" value="true"/>
+            <column name="address" value="Адрес, где проживает Виктор"/>
+            <column name="city_id" value="1"/>
+            <column name="deleted" value="false"/>
+        </insert>
+        <insert schemaName="users_scheme" tableName="users">
+            <column name="name" value="Дмитрий"/>
+            <column name="login" value="dmitry"/>
+            <column name="gender" value="M"/>
+            <column name="email" value="dmitry@gmail.com"/>
+            <column name="phone" value="8(960)333-33-33"/>
+            <column name="active" value="true"/>
+            <column name="address" value="Адрес, где проживает Дмитрий"/>
+            <column name="city_id" value="2"/>
+            <column name="deleted" value="false"/>
+        </insert>
+        <insert schemaName="users_scheme" tableName="users">
+            <column name="name" value="Олег"/>
+            <column name="login" value="oleg"/>
+            <column name="gender" value="M"/>
+            <column name="email" value="oleg@gmail.com"/>
+            <column name="phone" value="8(950)111-11-11"/>
+            <column name="active" value="true"/>
+            <column name="address" value="Адрес, где проживает Олег"/>
+            <column name="city_id" value="3"/>
+            <column name="deleted" value="false"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

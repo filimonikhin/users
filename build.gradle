@@ -19,12 +19,25 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.postgresql:postgresql:42.6.0'
+	implementation 'org.liquibase:liquibase-core'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+jar {
+	manifest {
+		attributes(
+				'Main-Class':'skillbox.com.users.UsersApplication'
+		)
+	}
+}
+
+//application {
+//	mainClass = 'skillbox.com.users.UsersApplication'
+//}
 
 //compileJava.options.encoding = 'WINDOWS-1251' // устанавливает кодировку для компилируемого кода
 //javadoc.options.encoding = 'WINDOWS-1251' // устанавливает кодировку для генерируемой документации

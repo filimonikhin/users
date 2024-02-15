@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="1.0.0-13" author="Fil">
+        <createSequence schemaName="users_scheme" sequenceName="subscription_id_seq" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="1.0.0-14" author="Fil">
+        <createTable schemaName="users_scheme" tableName="subscriptions" remarks="Подписки">
+            <column name="id" type="integer" defaultValueComputed="nextval('subscription_id_seq')" remarks="ИД">
+				<constraints primaryKeyName="subscriptions_pkey" nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="subscriber_id" type="integer" remarks="ИД кто подписался">
+				<constraints nullable="false"/>
+            </column>
+            <column name="subscribed_id" type="integer" remarks="ИД на кого подписались">
+				<constraints nullable="false"/>
+            </column>
+            <column name="subscribe_date" type="date" remarks="Дата подписки">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deleted" type="boolean" remarks="soft deleted">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.0-15" author="Fil">
+        <createIndex schemaName="users_scheme" tableName="subscriptions" indexName="subscriptions_subscribed_subscriber_uidx" unique="true">
+            <column name="subscribed_id"/>
+            <column name="subscriber_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="1.0.0-16" author="Fil">
+        <createIndex schemaName="users_scheme" tableName="subscriptions" indexName="subscriptions_subscriber_subscribed_uidx" unique="true">
+            <column name="subscriber_id"/>
+            <column name="subscribed_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

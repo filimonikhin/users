@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="1.0.0-1" author="Fil">
+        <createSequence schemaName="users_scheme" sequenceName="city_id_seq" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="1.0.0-2" author="Fil">
+        <createTable schemaName="users_scheme" tableName="cities" remarks="Справочник городов">
+            <column name="id" type="integer" defaultValueComputed="nextval('city_id_seq')">
+				<constraints primaryKeyName="cities_pkey" nullable="false" primaryKey="true" unique="true"/>
+            </column>
+            <column name="name" type="varchar(64)" remarks="Наименование города">
+				<constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.0-3" author="Fil">
+        <insert schemaName="users_scheme" tableName="cities">
+            <column name="name" value="Москва"/>
+        </insert>
+        <insert schemaName="users_scheme" tableName="cities">
+            <column name="name" value="Воронеж"/>
+        </insert>
+        <insert schemaName="users_scheme" tableName="cities">
+            <column name="name" value="Липецк"/>
+        </insert>
+        <insert schemaName="users_scheme" tableName="cities">
+            <column name="name" value="Рязань"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.0.0-4" author="Fil">
+        <createIndex schemaName="users_scheme" tableName="cities" indexName="cities_name_idx">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
